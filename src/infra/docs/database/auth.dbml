@@ -1,0 +1,65 @@
+Project TeachMateAuth {
+  database_type: 'PostgreSQL'
+  Note: '''
+    # Auth Database
+  '''
+}
+
+
+Table "User" {
+  "id" INT [pk, increment, not null]
+  "name" INT [not null]
+  "email" INT [not null]
+  "password" INT [not null]
+  "is_active" INT [not null]
+  "created_at" DATETIME [default: `now()`]
+  "updated_at" DATETIME [default: `now()`]
+  "deleted_at" DATETIME [default: null]
+}
+
+Table "UserRole" {
+  "role_id" INT [pk, not null, ref: > Role.id]
+  "user_id" INT [pk, not null, ref: > User.id]
+  "created_at" DATETIME [default: `now()`]
+  "updated_at" DATETIME [default: `now()`]
+  "deleted_at" DATETIME [default: null]
+}
+
+Table "Role" {
+  "id" INT [pk, increment, not null]
+  "name" TEXT [not null]
+  "display_name" TEXT [not null]
+  "description" TEXT [not null]
+  "created_at" DATETIME [default: `now()`]
+  "updated_at" DATETIME [default: `now()`]
+  "deleted_at" DATETIME [default: null]
+}
+
+Table "PermissionRole" {
+  "permission_id" INT [pk, not null, ref: > Permission.id]
+  "role_id" INT [pk, not null, ref: > Permission.id]
+  "created_at" DATETIME [default: `now()`]
+  "updated_at" DATETIME [default: `now()`]
+  "deleted_at" DATETIME [default: null]
+}
+
+Table "Permission" {
+  "id" INT [pk, increment, not null]
+  "key" TEXT [not null]
+  "description" TEXT [not null]
+  "created_at" DATETIME [default: `now()`]
+  "updated_at" DATETIME [default: `now()`]
+  "deleted_at" DATETIME [default: null]
+}
+
+Table "Session" {
+  "id" INT [pk, increment, not null]
+  "token" INT [not null]
+  "user_id" INT [not null, ref: > User.id]
+  "client_id" INT [not null]
+  "created_at" DATETIME [default: `now()`]
+  "updated_at" DATETIME [default: `now()`]
+  "deleted_at" DATETIME [default: null]
+}
+
+

@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Coupon {
+  Id   Int    @id @default(autoincrement())
+  Code String
+
+  TierId Int
+  Tier   CouponTier @relation(fields: [TierId], references: [Id])
+
+  UserPhone   String?
+  IssuedAt    DateTime?     @db.Timestamptz()
+  CreatedAt   DateTime      @default(now())
+  DeletedAt   DateTime?
+  IssuanceLog IssuanceLog[]
+}
+
+model CouponTier {
+  Id        Int       @id
+  Name      String
+  Discount  Int
+  CreatedAt DateTime  @default(now())
+  DeletedAt DateTime?
+  Coupon    Coupon[]
+}
+
+model IssuanceLog {
+  Id Int @id @default(autoincrement())
+
+  CouponId Int
+  Coupon   Coupon @relation(fields: [CouponId], references: [Id])
+
+  Response CouponResponse
+
+  UserPhone String
+  CreatedAt DateTime @default(now()) @db.Timestamptz()
+}
+
+enum CouponResponse {
+  ISSUED
+  REACHED_LIMIT
+  INVALID
+}
